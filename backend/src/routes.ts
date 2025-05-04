@@ -29,12 +29,15 @@ router
   });
 
 router
-  .route("/task/:id(\\d+)")
-  .get(async (req: Request, res: Response) => {
+  .route("/creature/:id")
+  .get(async (req: Request, res: Response): Promise<void> => {
     const creature = await getCreatureById(Number(req.params.id));
-    if (!creature) return res.status(404).json({ message: "Not found" });
+    if (!creature) {
+      res.status(404).json({ message: "Not found" });
+      return;
+    }
     res.json(creature);
-  })
+  })  
   .put(async (req: Request, res: Response) => {
     try {
       const updated = await updateCreature(Number(req.params.id), req.body);
