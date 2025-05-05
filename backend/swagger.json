@@ -1,208 +1,232 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "PF2E Creature Manager API",
-      "version": "1.0.0",
-      "description": "A simple REST API for managing Pathfinder 2e NPCs and monsters."
-    },
-    "servers": [
-      {
-        "url": "http://localhost:3000/api",
-        "description": "Local development server"
-      }
-    ],
-    "paths": {
-      "/creature": {
-        "get": {
-          "summary": "Get all creatures",
-          "description": "Returns a list of all creatures. You can optionally filter by query parameters.",
-          "parameters": [
-            {
-              "name": "level",
-              "in": "query",
-              "description": "Filter by level",
-              "schema": {
-                "type": "integer"
-              }
-            },
-            {
-              "name": "creatureName",
-              "in": "query",
-              "description": "Filter by creature name (partial match)",
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "A list of creatures"
-            },
-            "500": {
-              "description": "Server error"
-            }
-          }
-        },
-        "post": {
-          "summary": "Create a new creature",
-          "description": "Adds a new creature to the database.",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Creature"
-                }
-              }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "PF2E Creature Manager API",
+    "version": "1.0.0",
+    "description": "A simple REST API for managing Pathfinder 2e NPCs and monsters."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/creature": {
+      "get": {
+        "summary": "Get all creatures",
+        "description": "Returns a list of all creatures. You can optionally filter by query parameters.",
+        "parameters": [
+          {
+            "name": "level",
+            "in": "query",
+            "description": "Filter by level",
+            "schema": {
+              "type": "integer"
             }
           },
-          "responses": {
-            "201": {
-              "description": "Creature created successfully"
-            },
-            "500": {
-              "description": "Server error"
+          {
+            "name": "creatureName",
+            "in": "query",
+            "description": "Filter by creature name (partial match)",
+            "schema": {
+              "type": "string"
             }
+          },
+          {
+            "name": "aligment",
+            "in": "query",
+            "description": "Filter by alignment (e.g. CE, LG, N)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "creatureFamily",
+            "in": "query",
+            "description": "Filter by creature family (partial match)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of creatures"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       },
-      "/creature/{id}": {
-        "get": {
-          "summary": "Get a creature by ID",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
+      "post": {
+        "summary": "Create a new creature",
+        "description": "Adds a new creature to the database.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
               "schema": {
-                "type": "integer"
+                "$ref": "#/components/schemas/Creature"
               }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Creature found"
-            },
-            "404": {
-              "description": "Creature not found"
-            },
-            "500": {
-              "description": "Server error"
             }
           }
         },
-        "put": {
-          "summary": "Update a creature by ID",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Creature"
-                }
-              }
-            }
+        "responses": {
+          "201": {
+            "description": "Creature created successfully"
           },
-          "responses": {
-            "200": {
-              "description": "Creature updated successfully"
-            },
-            "404": {
-              "description": "Creature not found"
-            },
-            "500": {
-              "description": "Server error"
-            }
-          }
-        },
-        "delete": {
-          "summary": "Delete a creature by ID",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "Creature deleted"
-            },
-            "404": {
-              "description": "Creature not found"
-            },
-            "500": {
-              "description": "Server error"
-            }
+          "500": {
+            "description": "Server error"
           }
         }
       }
     },
-    "components": {
-      "schemas": {
-        "Creature": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "example": "Goblin Warrior"
-            },
-            "creatureName": {
-              "type": "string",
-              "example": "Goblin"
-            },
-            "creatureFamily": {
-              "type": "string",
-              "nullable": true,
-              "example": "Humanoid"
-            },
-            "hp": {
-              "type": "integer",
-              "example": 35
-            },
-            "level": {
-              "type": "integer",
-              "example": 2
-            },
-            "location": {
-              "type": "string",
-              "nullable": true,
-              "example": "Abandoned mine"
-            },
-            "aligment": {
-              "type": "string",
-              "nullable": true,
-              "example": "CE"
-            },
-            "description": {
-              "type": "string",
-              "nullable": true,
-              "example": "A sneaky goblin warrior with a rusted blade."
-            },
-            "traits": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "example": ["Stealthy", "Aggressive"]
+    "/creature/{id}": {
+      "get": {
+        "summary": "Get a creature by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Creature found"
           },
-          "required": ["name", "creatureName", "hp", "level", "traits"]
+          "404": {
+            "description": "Creature not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a creature by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Creature"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Creature updated successfully"
+          },
+          "404": {
+            "description": "Creature not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a creature by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Creature deleted"
+          },
+          "404": {
+            "description": "Creature not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "Creature": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Goblin Warrior"
+          },
+          "creatureName": {
+            "type": "string",
+            "example": "Goblin"
+          },
+          "creatureFamily": {
+            "type": "string",
+            "nullable": true,
+            "example": "Humanoid"
+          },
+          "hp": {
+            "type": "integer",
+            "example": 35
+          },
+          "level": {
+            "type": "integer",
+            "example": 2
+          },
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "example": "Abandoned mine"
+          },
+          "aligment": {
+            "type": "string",
+            "nullable": true,
+            "example": "CE"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "A sneaky goblin warrior with a rusted blade."
+          },
+          "traits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Stealthy",
+              "Aggressive"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "creatureName",
+          "hp",
+          "level",
+          "traits"
+        ]
+      }
+    }
   }
-  
+}

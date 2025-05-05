@@ -16,10 +16,16 @@ export const getCreatures = async (query: any) => {
   if (query.aligment) {
     filters.aligment = query.aligment;
   }
+  if (query.creatureFamily) {
+    filters.creatureFamily = {
+      [Op.like]: `%${query.creatureFamily}%`,
+    };
+  }
 
   return await Creature.findAll({
-    include: ['traits']
-  });;
+    where: filters,
+    include: ["traits"],
+  });
 };
 
 export const getCreatureById = async (id: number) => {
@@ -27,18 +33,20 @@ export const getCreatureById = async (id: number) => {
 };
 
 export const createCreature = async (data: any) => {
-    const {traits, ...creatureData} = data;
-    const creature = await Creature.create(creatureData);
-    if (traits) {
-      await Trait.bulkCreate(traits.map((name: string) => {
+  const { traits, ...creatureData } = data;
+  const creature = await Creature.create(creatureData);
+  if (traits) {
+    await Trait.bulkCreate(
+      traits.map((name: string) => {
         return {
           name: name,
           creatureId: creature.id,
-        }
-      }));
-    }
+        };
+      })
+    );
+  }
   return await Creature.findByPk(creature.id, {
-    include: ["traits"]
+    include: ["traits"],
   });
 };
 
