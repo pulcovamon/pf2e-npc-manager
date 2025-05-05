@@ -1,5 +1,6 @@
 import { Op } from "sequelize";
 import { Creature } from "./models/creature";
+import Trait from "./models/trait";
 
 export const getCreatures = async (query: any) => {
   const filters: any = {};
@@ -16,7 +17,9 @@ export const getCreatures = async (query: any) => {
     filters.aligment = query.aligment;
   }
 
-  return await Creature.findAll({ where: filters });
+  return await Creature.findAll({
+    include: ['traits']
+  });;
 };
 
 export const getCreatureById = async (id: number) => {
@@ -24,7 +27,19 @@ export const getCreatureById = async (id: number) => {
 };
 
 export const createCreature = async (data: any) => {
-  return await Creature.create(data);
+    const {traits, ...creatureData} = data;
+    const creature = await Creature.create(creatureData);
+    if (traits) {
+      await Trait.bulkCreate(traits.map((name: string) => {
+        return {
+          name: name,
+          creatureId: creature.id,
+        }
+      }));
+    }
+  return await Creature.findByPk(creature.id, {
+    include: ["traits"]
+  });
 };
 
 export const updateCreature = async (id: number, data: any) => {

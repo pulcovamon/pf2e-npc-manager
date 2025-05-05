@@ -198,12 +198,6 @@
                 "type": "string"
               },
               "example": ["Stealthy", "Aggressive"]
-            },
-            "created": {
-              "type": "string",
-              "format": "date-time",
-              "nullable": true,
-              "example": "2025-05-04T12:00:00Z"
             }
           },
           "required": ["name", "creatureName", "hp", "level", "traits"]

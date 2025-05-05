@@ -1,4 +1,3 @@
-// src/models/npc.ts
 import {
     DataTypes,
     Model,
@@ -21,14 +20,13 @@ import {
     declare location: string | null;
     declare aligment: string | null;
     declare description: string | null;
-    declare traits: string[];
-    declare created: Date | null;
+    declare created: CreationOptional<Date>;
   }
   
   Creature.init(
     {
       id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
@@ -63,11 +61,6 @@ import {
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
-      },
-      traits: {
-        type: DataTypes.JSON,
-        allowNull: false,
-        defaultValue: [],
       },
       created: {
         type: DataTypes.DATE,

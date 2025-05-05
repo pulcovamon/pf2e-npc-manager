@@ -24,6 +24,7 @@ router
       const newCreature = await createCreature(req.body);
       res.status(201).json(newCreature);
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error });
     }
   });
