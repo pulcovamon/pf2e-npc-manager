@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import type Creature from '@/types/types';
-import CreatureFormComponent from '@/components/CreatureForm.vue';
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import type Creature from '@/types/types'
+import CreatureFormComponent from '@/components/CreatureForm.vue'
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
-const creature = ref<Creature | null>(null);
-const editMode = ref(false);
+const creature = ref<Creature | null>(null)
+const editMode = ref(false)
 const edited = ref<Creature>({
   name: '',
   creatureName: '',
@@ -17,41 +17,41 @@ const edited = ref<Creature>({
   aligment: '',
   creatureFamily: '',
   description: '',
-  traits: []
-});
+  traits: [],
+})
 
 onMounted(async () => {
   if (isNaN(Number(route.params.id))) {
-    router.replace({ name: 'NotFound' });
-    return;
+    router.replace({ name: 'NotFound' })
+    return
   }
 
-  const res = await fetch(`http://localhost:3000/api/creature/${route.params.id}`);
+  const res = await fetch(`http://localhost:3000/api/creature/${route.params.id}`)
 
   if (res.status === 404) {
-    router.replace({ name: 'NotFound' });
-    return;
+    router.replace({ name: 'NotFound' })
+    return
   }
 
-  const data = await res.json();
-  creature.value = data;
+  const data = await res.json()
+  creature.value = data
   edited.value = {
     ...data,
-    traits: Array.isArray(data.traits) ? data.traits : []
-  };
-});
+    traits: Array.isArray(data.traits) ? data.traits : [],
+  }
+})
 
 function enterEditMode() {
-  editMode.value = true;
+  editMode.value = true
 }
 
 function cancelEdit() {
-  editMode.value = false;
+  editMode.value = false
   if (creature.value) {
     edited.value = {
       ...creature.value,
-      traits: Array.isArray(creature.value.traits) ? creature.value.traits : []
-    };
+      traits: Array.isArray(creature.value.traits) ? creature.value.traits : [],
+    }
   }
 }
 
@@ -60,18 +60,21 @@ async function saveChanges() {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(edited.value),
-  });
-  const updated = await res.json();
-  creature.value = updated;
-  editMode.value = false;
+  })
+  const updated = await res.json()
+  creature.value = updated
+  editMode.value = false
 }
 
 async function handleDelete(id: number) {
+  const confirmDelete = window.confirm('Are you sure you want to delete this creature?')
+  if (!confirmDelete) return
+  
   const res = await fetch(`http://localhost:3000/api/creature/${id}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
-  });
-  router.push('/creatures');
+  })
+  router.push('/creatures')
 }
 </script>
 
@@ -96,7 +99,8 @@ async function handleDelete(id: number) {
 
       <button
         @click="handleDelete(creature.id)"
-        class="text-sm bg-violet-600 hover:bg-violet-900 text-white px-3 py-1 rounded cursor-pointer">
+        class="text-sm bg-violet-600 hover:bg-violet-900 text-white px-3 py-1 rounded cursor-pointer"
+      >
         <font-awesome-icon icon="trash-can" />
         Delete
       </button>
@@ -125,17 +129,21 @@ async function handleDelete(id: number) {
       <CreatureFormComponent v-model="edited" />
 
       <div class="flex justify-end gap-2 mt-4">
-        <button @click="cancelEdit" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded cursor-pointer">
+        <button
+          @click="cancelEdit"
+          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded cursor-pointer"
+        >
           Cancel
         </button>
-        <button @click="saveChanges" class="px-4 py-2 bg-violet-600 hover:bg-violet-900 text-white rounded cursor-pointer">
+        <button
+          @click="saveChanges"
+          class="px-4 py-2 bg-violet-600 hover:bg-violet-900 text-white rounded cursor-pointer"
+        >
           Save
         </button>
       </div>
     </div>
 
-    <div v-if="!creature && !editMode" class="text-gray-500 text-center mt-8">
-      Loading...
-    </div>
+    <div v-if="!creature && !editMode" class="text-gray-500 text-center mt-8">Loading...</div>
   </div>
 </template>

@@ -49,7 +49,10 @@ function close() {
         <CreatureFormComponent v-model="form" />
 
         <div class="flex justify-end mt-6 gap-2">
-          <button @click="close" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded cursor-pointer">
+          <button
+            @click="close"
+            class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded cursor-pointer"
+          >
             Cancel
           </button>
           <button

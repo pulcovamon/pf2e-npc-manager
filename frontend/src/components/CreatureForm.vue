@@ -13,42 +13,71 @@ const emit = defineEmits<{
 const localForm = ref({ ...props.modelValue })
 const traitsInput = ref(localForm.value.traits.join(', ')) // už je string[]
 
-watch(() => props.modelValue, (newVal) => {
-  localForm.value = { ...newVal }
-  traitsInput.value = newVal.traits.join(', ')
-})
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    localForm.value = { ...newVal }
+    traitsInput.value = newVal.traits.join(', ')
+  },
+)
 
-watch([localForm, traitsInput], () => {
-  emit('update:modelValue', {
-    ...localForm.value,
-    traits: traitsInput.value
-      .split(',')
-      .map(t => t.trim())
-      .filter(t => t.length > 0),
-  })
-}, { deep: true })
+watch(
+  [localForm, traitsInput],
+  () => {
+    emit('update:modelValue', {
+      ...localForm.value,
+      traits: traitsInput.value
+        .split(',')
+        .map((t) => t.trim())
+        .filter((t) => t.length > 0),
+    })
+  },
+  { deep: true },
+)
 </script>
 
 <template>
   <div class="space-y-4">
     <div>
       <label class="block font-semibold mb-1">Name *</label>
-      <input v-model="localForm.name" class="w-full border border-gray-300 rounded p-2" type="text" placeholder="Ancient Dragon" />
+      <input
+        v-model="localForm.name"
+        class="w-full border border-gray-300 rounded p-2"
+        type="text"
+        placeholder="Ancient Dragon"
+      />
     </div>
 
     <div>
       <label class="block font-semibold mb-1">Creature Type *</label>
-      <input v-model="localForm.creatureName" class="w-full border border-gray-300 rounded p-2" type="text" placeholder="Dragon" />
+      <input
+        v-model="localForm.creatureName"
+        class="w-full border border-gray-300 rounded p-2"
+        type="text"
+        placeholder="Dragon"
+      />
     </div>
 
     <div>
       <label class="block font-semibold mb-1">Level *</label>
-      <input v-model.number="localForm.level" class="w-full border border-gray-300 rounded p-2" type="number" min="0" placeholder="12" />
+      <input
+        v-model.number="localForm.level"
+        class="w-full border border-gray-300 rounded p-2"
+        type="number"
+        min="0"
+        placeholder="12"
+      />
     </div>
 
     <div>
       <label class="block font-semibold mb-1">HP *</label>
-      <input v-model.number="localForm.hp" class="w-full border border-gray-300 rounded p-2" type="number" min="1" placeholder="200" />
+      <input
+        v-model.number="localForm.hp"
+        class="w-full border border-gray-300 rounded p-2"
+        type="number"
+        min="1"
+        placeholder="200"
+      />
     </div>
 
     <div>
@@ -69,17 +98,32 @@ watch([localForm, traitsInput], () => {
 
     <div>
       <label class="block font-semibold mb-1">Creature Family</label>
-      <input v-model="localForm.creatureFamily" class="w-full border border-gray-300 rounded p-2" type="text" placeholder="Draconic" />
+      <input
+        v-model="localForm.creatureFamily"
+        class="w-full border border-gray-300 rounded p-2"
+        type="text"
+        placeholder="Draconic"
+      />
     </div>
 
     <div>
       <label class="block font-semibold mb-1">Description</label>
-      <textarea v-model="localForm.description" class="w-full border border-gray-300 rounded p-2" rows="3" placeholder="Ancient desert-dwelling dragon..." />
+      <textarea
+        v-model="localForm.description"
+        class="w-full border border-gray-300 rounded p-2"
+        rows="3"
+        placeholder="Ancient desert-dwelling dragon..."
+      />
     </div>
 
     <div>
       <label class="block font-semibold mb-1">Traits (comma-separated)</label>
-      <input v-model="traitsInput" class="w-full border border-gray-300 rounded p-2" type="text" placeholder="fire, magical, desert" />
+      <input
+        v-model="traitsInput"
+        class="w-full border border-gray-300 rounded p-2"
+        type="text"
+        placeholder="fire, magical, desert"
+      />
     </div>
   </div>
 </template>
