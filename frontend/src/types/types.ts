@@ -1,5 +1,5 @@
 export interface Creature {
-    id: number
+    id?: number
     name: string
     creatureName: string
     level: number
@@ -7,5 +7,5 @@ export interface Creature {
     aligment?: string
     creatureFamily?: string
     description?: string
-    traits: { name: string }[]
+    traits: string[]
 };  

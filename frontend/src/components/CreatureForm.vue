@@ -1,45 +1,30 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-
-interface Trait {
-  name: string
-}
-
-interface CreatureFormModel {
-  name: string
-  creatureName: string
-  level: number
-  hp: number
-  aligment?: string
-  creatureFamily?: string
-  description?: string
-  traits: Trait[]
-}
+import { ref, watch } from 'vue'
+import type Creature from '@/types/types.ts'
 
 const props = defineProps<{
-  modelValue: CreatureFormModel
+  modelValue: Creature
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: CreatureFormModel): void
+  (e: 'update:modelValue', value: Creature): void
 }>()
 
 const localForm = ref({ ...props.modelValue })
-const traitsInput = ref(localForm.value.traits.map(t => t.name).join(', '))
+const traitsInput = ref(localForm.value.traits.join(', ')) // už je string[]
 
 watch(() => props.modelValue, (newVal) => {
   localForm.value = { ...newVal }
-  traitsInput.value = newVal.traits.map(t => t.name).join(', ')
+  traitsInput.value = newVal.traits.join(', ')
 })
 
-watch(localForm, (newVal) => {
+watch([localForm, traitsInput], () => {
   emit('update:modelValue', {
-    ...newVal,
+    ...localForm.value,
     traits: traitsInput.value
       .split(',')
       .map(t => t.trim())
-      .filter(t => t.length > 0)
-      .map(name => ({ name })),
+      .filter(t => t.length > 0),
   })
 }, { deep: true })
 </script>

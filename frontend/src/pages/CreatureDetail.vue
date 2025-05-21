@@ -55,7 +55,7 @@ async function saveChanges() {
   editMode.value = false;
 }
 
-async function handleAdd(id: number) {
+async function handleDelete(id: number) {
   const res = await fetch(`http://localhost:3000/api/creature/${id}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
@@ -84,7 +84,7 @@ async function handleAdd(id: number) {
       </button>
 
       <button
-        @click="handleAdd(creature.id)"
+        @click="handleDelete(creature.id)"
         class="text-sm bg-violet-600 hover:bg-violet-900 text-white px-3 py-1 rounded cursor-pointer">
         <font-awesome-icon icon="trash-can" />
         Delete
