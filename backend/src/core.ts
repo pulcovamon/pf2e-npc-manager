@@ -2,7 +2,7 @@ import { Op } from "sequelize";
 import { Creature } from "./models/creature";
 import Trait from "./models/trait";
 
-export const getCreatures = async (query: any) => {
+export async function getCreatures(query: any) {
   const filters: any = {};
 
   if (query.level) {
@@ -26,35 +26,37 @@ export const getCreatures = async (query: any) => {
     where: filters,
     include: ["traits"],
   });
-};
+}
 
-export const getCreatureById = async (id: number) => {
-  return await Creature.findByPk(id);
-};
+export async function getCreatureById(id: number) {
+  return await Creature.findByPk(id, { include: ["traits"] });
+}
 
-export const createCreature = async (data: any) => {
+export async function createCreature(data: any) {
   const { traits, ...creatureData } = data;
   const creature = await Creature.create(creatureData);
   if (traits) {
     await Trait.bulkCreate(
-      traits.map((name: string) => {
-        return {
-          name: name,
-          creatureId: creature.id,
-        };
-      })
+      traits.map((t: { name: string }) => ({
+        name: t.name,
+        creatureId: creature.id,
+      }))
     );
   }
   return await Creature.findByPk(creature.id, {
     include: ["traits"],
   });
-};
+}
 
-export const updateCreature = async (id: number, data: any) => {
+export async function updateCreature(id: number, data: any) {
   await Creature.update(data, { where: { id } });
-  return await Creature.findByPk(id);
-};
+  return await Creature.findByPk(id, { include: ["traits"] });
+}
 
-export const deleteCreature = async (id: number) => {
+export async function deleteCreature(id: number) {
   return await Creature.destroy({ where: { id } });
-};
+}
+
+export async function bulkCreateCreatures(creatures: any[]) {
+  return await Creature.bulkCreate(creatures, { validate: true });
+}

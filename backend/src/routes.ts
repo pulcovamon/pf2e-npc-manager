@@ -5,6 +5,7 @@ import {
   createCreature,
   updateCreature,
   deleteCreature,
+  bulkCreateCreatures
 } from "./core";
 
 const router = Router();
@@ -53,6 +54,16 @@ router
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ error });
+    }
+  });
+
+  router.post("/creature/bulk", async (req: Request, res: Response) => {
+    try {
+      const inserted = await bulkCreateCreatures(req.body);
+      res.status(201).json({ created: inserted.length });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Bulk insert failed" });
     }
   });
 

@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "PF2E Creature Manager API",
+    "title": "RPG Creature Manager API",
     "version": "1.0.0",
-    "description": "A simple REST API for managing Pathfinder 2e NPCs and monsters."
+    "description": "A simple REST API for managing RPG NPCs and monsters."
   },
   "servers": [
     {
@@ -159,6 +159,46 @@
           },
           "404": {
             "description": "Creature not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/creature/bulk": {
+      "post": {
+        "summary": "Bulk add creatures",
+        "description": "Adds multiple creatures to the database in a single request.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Creature"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Creatures added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "created": {
+                      "type": "integer",
+                      "example": 6
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Server error"
