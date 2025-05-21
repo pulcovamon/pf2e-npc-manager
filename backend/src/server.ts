@@ -2,12 +2,14 @@ import express, { Express } from "express";
 import router from "./routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json";
+import cors from 'cors';
 import sequelize from "./database";
 import "./models/creature";
 import "./models/trait";
 import "./models/models";
 
 const app: Express = express();
+app.use(cors());
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
