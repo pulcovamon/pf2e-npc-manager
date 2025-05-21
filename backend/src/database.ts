@@ -6,4 +6,9 @@ const sequelize = new Sequelize({
   logging: false,
 });
 
+sequelize.authenticate().then(() => {
+  sequelize.query('PRAGMA foreign_keys = ON;');
+});
+
+
 export default sequelize;

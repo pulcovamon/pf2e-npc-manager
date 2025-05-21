@@ -35,16 +35,18 @@ export async function getCreatureById(id: number) {
 export async function createCreature(data: any) {
   const { traits, ...creatureData } = data;
   const creature = await Creature.create(creatureData);
-  if (traits) {
+
+  if (traits && Array.isArray(traits)) {
     await Trait.bulkCreate(
-      traits.map((t: { name: string }) => ({
-        name: t.name,
+      traits.map((trait: string) => ({
+        name: trait,
         creatureId: creature.id,
       }))
     );
   }
+
   return await Creature.findByPk(creature.id, {
-    include: ["traits"],
+    include: [{ model: Trait, as: "traits" }],
   });
 }
 
@@ -58,5 +60,27 @@ export async function deleteCreature(id: number) {
 }
 
 export async function bulkCreateCreatures(creatures: any[]) {
-  return await Creature.bulkCreate(creatures, { validate: true });
+  const createdCreatures = [];
+
+  for (const c of creatures) {
+    const { traits, ...creatureData } = c;
+    const creature = await Creature.create(creatureData);
+
+    if (traits && traits.length > 0) {
+      await Trait.bulkCreate(
+        traits.map((traitName: string) => ({
+          name: traitName,
+          creatureId: creature.id,
+        }))
+      );
+    }
+
+    const fullCreature = await Creature.findByPk(creature.id, {
+      include: ["traits"],
+    });
+
+    createdCreatures.push(fullCreature);
+  }
+
+  return createdCreatures;
 }
