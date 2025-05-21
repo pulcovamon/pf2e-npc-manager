@@ -21,7 +21,18 @@ const edited = ref<Creature>({
 });
 
 onMounted(async () => {
+  if (isNaN(Number(route.params.id))) {
+    router.replace({ name: 'NotFound' });
+    return;
+  }
+
   const res = await fetch(`http://localhost:3000/api/creature/${route.params.id}`);
+
+  if (res.status === 404) {
+    router.replace({ name: 'NotFound' });
+    return;
+  }
+
   const data = await res.json();
   creature.value = data;
   edited.value = {
