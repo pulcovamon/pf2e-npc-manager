@@ -44,35 +44,36 @@ async function handleAdd(creature: Omit<Creature, 'id'>) {
     </button>
 
     <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 bg-white/80">
-  <table class="min-w-full table-auto text-sm text-left text-gray-700">
-    <thead class="bg-gradient-to-r from-violet-100 to-indigo-100 text-gray-900 text-sm uppercase tracking-wide font-semibold">
-      <tr>
-        <th class="px-6 py-3">Name</th>
-        <th class="px-6 py-3">Type</th>
-        <th class="px-6 py-3 text-center">Level</th>
-        <th class="px-6 py-3 text-center">HP</th>
-        <th class="px-6 py-3 text-center">Alignment</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="c in creatures"
-        :key="c.id"
-        class="border-t border-gray-200 hover:bg-violet-50 transition"
-        @click="$router.push(`/creatures/${c.id}`)"
-      >
-        <td class="px-6 py-3 font-medium text-violet-600 hover:underline cursor-pointer">
-          {{ c.name }}
-        </td>
-        <td class="px-6 py-3">{{ c.creatureName }}</td>
-        <td class="px-6 py-3 text-center font-semibold">{{ c.level }}</td>
-        <td class="px-6 py-3 text-center font-semibold">{{ c.hp }}</td>
-        <td class="px-6 py-3 text-center">{{ c.aligment || '—' }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+      <table class="min-w-full table-auto text-sm text-left text-gray-700">
+        <thead
+          class="bg-gradient-to-r from-violet-100 to-indigo-100 text-gray-900 text-sm uppercase tracking-wide font-semibold"
+        >
+          <tr>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">Type</th>
+            <th class="px-6 py-3 text-center">Level</th>
+            <th class="px-6 py-3 text-center">HP</th>
+            <th class="px-6 py-3 text-center">Alignment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="c in creatures"
+            :key="c.id"
+            class="border-t border-gray-200 hover:bg-violet-50 transition"
+            @click="$router.push(`/creatures/${c.id}`)"
+          >
+            <td class="px-6 py-3 font-medium text-violet-600 hover:underline cursor-pointer">
+              {{ c.name }}
+            </td>
+            <td class="px-6 py-3">{{ c.creatureName }}</td>
+            <td class="px-6 py-3 text-center font-semibold">{{ c.level }}</td>
+            <td class="px-6 py-3 text-center font-semibold">{{ c.hp }}</td>
+            <td class="px-6 py-3 text-center">{{ c.aligment || '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <AddCreatureModal v-if="showModal" @close="showModal = false" @add="handleAdd" />

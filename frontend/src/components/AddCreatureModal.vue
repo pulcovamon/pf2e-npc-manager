@@ -8,6 +8,8 @@ const emit = defineEmits<{
   (e: 'add', creature: Creature): void
 }>()
 
+const formComponentRef = ref<InstanceType<typeof CreatureFormComponent> | null>(null)
+
 const form = ref<Creature>({
   name: '',
   creatureName: '',
@@ -20,6 +22,8 @@ const form = ref<Creature>({
 })
 
 function submit() {
+  if (!formComponentRef.value?.validate?.()) return
+
   emit('add', form.value)
   form.value = {
     name: '',
@@ -46,7 +50,14 @@ function close() {
       >
         <h2 class="text-xl font-bold mb-4">Add Creature</h2>
 
-        <CreatureFormComponent v-model="form" />
+        <form
+        id="create"
+        @submit="checkForm"
+        action="https://vuejs.org/"
+        method="post"
+        >
+          <CreatureFormComponent v-model="form" />
+        </form>
 
         <div class="flex justify-end mt-6 gap-2">
           <button
