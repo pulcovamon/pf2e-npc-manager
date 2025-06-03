@@ -20,6 +20,8 @@ const edited = ref<Creature>({
   traits: [],
 })
 
+const formComponentRef = ref<InstanceType<typeof CreatureFormComponent> | null>(null)
+
 onMounted(async () => {
   if (isNaN(Number(route.params.id))) {
     router.replace({ name: 'NotFound' })
@@ -35,9 +37,12 @@ onMounted(async () => {
 
   const data = await res.json()
   creature.value = data
+
   edited.value = {
     ...data,
-    traits: Array.isArray(data.traits) ? data.traits : [],
+    traits: Array.isArray(data.traits)
+      ? data.traits.map(t => typeof t === 'object' && t.name ? t.name : String(t))
+      : [],
   }
 })
 
@@ -50,30 +55,42 @@ function cancelEdit() {
   if (creature.value) {
     edited.value = {
       ...creature.value,
-      traits: Array.isArray(creature.value.traits) ? creature.value.traits : [],
+      traits: Array.isArray(creature.value.traits)
+        ? creature.value.traits.map(t => typeof t === 'object' && t.name ? t.name : String(t))
+        : [],
     }
   }
 }
 
 async function saveChanges() {
+  const valid = formComponentRef.value?.validate?.()
+  if (!valid) return
+
+  const payload = {
+    ...edited.value,
+    traits: edited.value.traits.map(t => ({ name: t })),
+  }
+
   const res = await fetch(`http://localhost:3000/api/creature/${route.params.id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(edited.value),
+    body: JSON.stringify(payload),
   })
+
   const updated = await res.json()
   creature.value = updated
   editMode.value = false
 }
-
+  
 async function handleDelete(id: number) {
   const confirmDelete = window.confirm('Are you sure you want to delete this creature?')
   if (!confirmDelete) return
-  
-  const res = await fetch(`http://localhost:3000/api/creature/${id}`, {
+
+  await fetch(`http://localhost:3000/api/creature/${id}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
   })
+
   router.push('/creatures')
 }
 </script>
@@ -126,7 +143,7 @@ async function handleDelete(id: number) {
     </div>
 
     <div v-if="editMode" class="space-y-4">
-      <CreatureFormComponent v-model="edited" />
+      <CreatureFormComponent ref="formComponentRef" v-model="edited" />
 
       <div class="flex justify-end gap-2 mt-4">
         <button

@@ -60,10 +60,10 @@ async function handleAdd(creature: Omit<Creature, 'id'>) {
           <tr
             v-for="c in creatures"
             :key="c.id"
-            class="border-t border-gray-200 hover:bg-violet-50 transition"
+            class="border-t border-gray-200 hover:bg-violet-50 transition cursor-pointer"
             @click="$router.push(`/creatures/${c.id}`)"
           >
-            <td class="px-6 py-3 font-medium text-violet-600 hover:underline cursor-pointer">
+            <td class="px-6 py-3 font-medium text-violet-600 hover:underline">
               {{ c.name }}
             </td>
             <td class="px-6 py-3">{{ c.creatureName }}</td>

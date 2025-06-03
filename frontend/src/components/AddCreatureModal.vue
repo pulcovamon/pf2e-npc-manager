@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import CreatureFormComponent from '@/components/CreatureForm.vue'
 import type Creature from '@/types/types.ts'
 
@@ -21,8 +21,16 @@ const form = ref<Creature>({
   traits: [],
 })
 
-function submit() {
-  if (!formComponentRef.value?.validate?.()) return
+async function submit() {
+  console.log('submit clicked')
+
+  formComponentRef.value?.syncFromModelValue?.()
+  await nextTick()
+
+  const valid = formComponentRef.value?.validate?.()
+  console.log('validation result:', valid)
+
+  if (!valid) return
 
   emit('add', form.value)
   form.value = {
@@ -50,13 +58,8 @@ function close() {
       >
         <h2 class="text-xl font-bold mb-4">Add Creature</h2>
 
-        <form
-        id="create"
-        @submit="checkForm"
-        action="https://vuejs.org/"
-        method="post"
-        >
-          <CreatureFormComponent v-model="form" />
+        <form @submit.prevent="submit">
+          <CreatureFormComponent ref="formComponentRef" v-model="form" />
         </form>
 
         <div class="flex justify-end mt-6 gap-2">
