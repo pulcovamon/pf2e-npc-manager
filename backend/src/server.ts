@@ -2,14 +2,21 @@ import express, { Express } from "express";
 import router from "./routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json";
-import cors from 'cors';
+import cors from "cors";
 import sequelize from "./database";
 import "./models/creature";
 import "./models/trait";
 import "./models/models";
 
 const app: Express = express();
-app.use(cors());
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type"],
+  credentials: true,
+}))
+
 const port = process.env.PORT || 3000;
 
 app.use(express.json());

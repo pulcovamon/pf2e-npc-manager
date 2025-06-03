@@ -9,6 +9,7 @@ const router = useRouter()
 
 const creature = ref<Creature | null>(null)
 const editMode = ref(false)
+
 const edited = ref<Creature>({
   name: '',
   creatureName: '',
@@ -22,27 +23,32 @@ const edited = ref<Creature>({
 
 const formComponentRef = ref<InstanceType<typeof CreatureFormComponent> | null>(null)
 
-onMounted(async () => {
-  if (isNaN(Number(route.params.id))) {
+  onMounted(async () => {
+  const id = Number(route.params.id)
+  if (isNaN(id)) {
     router.replace({ name: 'NotFound' })
     return
   }
 
-  const res = await fetch(`http://localhost:3000/api/creature/${route.params.id}`)
+  try {
+    const res = await fetch(`http://localhost:3000/api/creature/${id}`)
 
-  if (res.status === 404) {
+    if (!res.ok) {
+      router.replace({ name: 'NotFound' })
+      return
+    }
+
+    const data = await res.json()
+    creature.value = data
+    edited.value = {
+      ...data,
+      traits: Array.isArray(data.traits)
+        ? data.traits.map((t: any) => (typeof t === 'string' ? t : t.name ?? ''))
+        : [],
+    }
+  } catch (err) {
+    console.error('Failed to fetch creature:', err)
     router.replace({ name: 'NotFound' })
-    return
-  }
-
-  const data = await res.json()
-  creature.value = data
-
-  edited.value = {
-    ...data,
-    traits: Array.isArray(data.traits)
-      ? data.traits.map(t => typeof t === 'object' && t.name ? t.name : String(t))
-      : [],
   }
 })
 
@@ -56,19 +62,19 @@ function cancelEdit() {
     edited.value = {
       ...creature.value,
       traits: Array.isArray(creature.value.traits)
-        ? creature.value.traits.map(t => typeof t === 'object' && t.name ? t.name : String(t))
+        ? creature.value.traits.map((t: any) => (typeof t === 'string' ? t : t.name ?? ''))
         : [],
     }
   }
 }
 
 async function saveChanges() {
-  const valid = formComponentRef.value?.validate?.()
-  if (!valid) return
+  const isValid = formComponentRef.value?.validate?.()
+  if (!isValid) return
 
-  const payload = {
+  const payload: Creature = {
     ...edited.value,
-    traits: edited.value.traits.map(t => ({ name: t })),
+    traits: edited.value.traits.map((t: any) => (typeof t === 'string' ? t : t.name ?? '')),
   }
 
   const res = await fetch(`http://localhost:3000/api/creature/${route.params.id}`, {
@@ -90,7 +96,6 @@ async function handleDelete(id: number) {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
   })
-
   router.push('/creatures')
 }
 </script>

@@ -51,9 +51,24 @@ export async function createCreature(data: any) {
 }
 
 export async function updateCreature(id: number, data: any) {
-  await Creature.update(data, { where: { id } });
+  const { traits, ...creatureData } = data;
+
+  await Creature.update(creatureData, { where: { id } });
+
+  if (Array.isArray(traits)) {
+    await Trait.destroy({ where: { creatureId: id } });
+
+    await Trait.bulkCreate(
+      traits.map((name: string) => ({
+        name,
+        creatureId: id,
+      }))
+    );
+  }
+
   return await Creature.findByPk(id, { include: ["traits"] });
 }
+
 
 export async function deleteCreature(id: number) {
   return await Creature.destroy({ where: { id } });
