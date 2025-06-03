@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Barghest",
+    "creatureName": "Barghest",
+    "level": 4,
+    "hp": 85,
+    "aligment": "CE",
+    "creatureFamily": "Fiend",
+    "description": "A wolf-like fiend that devours souls to grow stronger. Often found serving greater evils or seeking to manipulate goblinoid tribes.",
+    "traits": [
+      "fiend",
+      "shapechanger",
+      "evil"
+    ]
+  },
+  {
+    "name": "Vrock",
+    "creatureName": "Vrock",
+    "level": 9,
+    "hp": 150,
+    "aligment": "CE",
+    "creatureFamily": "Demon",
+    "description": "A vulture-headed demon that delights in carnage and spreading madness through screeches and spores.",
+    "traits": [
+      "aura",
+      "demon",
+      "chaotic"
+    ]
+  },
+  {
+    "name": "Skeleton Champion",
+    "creatureName": "Skeleton",
+    "level": 2,
+    "hp": 40,
+    "aligment": "NE",
+    "creatureFamily": "Undead",
+    "description": "An undead warrior risen from an ancient battlefield, mindlessly following its last command.",
+    "traits": [
+      "undead",
+      "mindless",
+      "resilient"
+    ]
+  },
+  {
+    "name": "Torla Ironhand",
+    "creatureName": "Dwarf",
+    "level": 3,
+    "hp": 55,
+    "aligment": "LG",
+    "creatureFamily": "Humanoid",
+    "description": "A dwarven blacksmith who helps adventurers repair their gear and provides sage advice from a life well-lived.",
+    "traits": [
+      "craftsman",
+      "wise",
+      "lawful"
+    ]
+  },
+  {
+    "name": "Sylrielle of the Glade",
+    "creatureName": "Elf",
+    "level": 5,
+    "hp": 60,
+    "aligment": "CG",
+    "creatureFamily": "Humanoid",
+    "description": "A woodland druid who protects sacred groves and communes with spirits of the forest.",
+    "traits": [
+      "nature",
+      "druid",
+      "fey-touch"
+    ]
+  },
+  {
+    "name": "Jareth the Informant",
+    "creatureName": "Human",
+    "level": 2,
+    "hp": 38,
+    "aligment": "CN",
+    "creatureFamily": "Humanoid",
+    "description": "A shady contact with ties to various thieves' guilds. Can be helpful... for a price.",
+    "traits": [
+      "spy",
+      "streetwise",
+      "neutral"
+    ]
+  }
+]
